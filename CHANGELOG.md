@@ -4,6 +4,19 @@ All notable changes to the Rooh by Navu Raah website.
 
 ---
 
+## 2026-04-20 — Rotating Headline, Icon Refresh, Copy Refinements
+**Commit:** `6313b4e`
+
+- Hero headline now cycles through Hindi + English loved ones every 3.5s (Dadi, Papa, Grandma, Nani, Mama, etc.) with fade transition
+- Replaced Gemini-like ✦ icons: 🪄 (magic), 🌟 (personalisation), 🌙 (bedtime)
+- "Grandma's Voice" renamed to "Loved One's Voice" in Voice Cloning feature card
+- Removed redundant orb from Voice Cloning big card
+- Reworked Zero Guilt copy to lead with privacy positives (local data, no server storage)
+- Removed all em dashes from content and meta tags, reworked punctuation
+- Removed border around waitlist email form
+- Added hello@navuraah.com contact link in footer
+- Improved Voice Cloning card mobile responsiveness (smaller padding, font sizing, line break removal)
+
 ## 2026-04-20 — Mobile Responsiveness + Image Path Fix
 **Commit:** `cf3c5ee`
 
