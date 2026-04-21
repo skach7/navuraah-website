@@ -1,0 +1,5 @@
+# Screenshots for visual feedback (local only)
+screenshots/
+
+# OS files
+.DS_Store
