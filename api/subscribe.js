@@ -1,10 +1,3 @@
-const mailchimp = require('@mailchimp/mailchimp_marketing');
-
-mailchimp.setConfig({
-  apiKey: process.env.MAILCHIMP_API_KEY,
-  server: process.env.MAILCHIMP_SERVER,
-});
-
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -16,20 +9,45 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ success: false, error: 'Email is required' });
   }
 
+  const API_KEY = process.env.MAILCHIMP_API_KEY;
+  const SERVER = process.env.MAILCHIMP_SERVER;
+  const AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID;
+
+  if (!API_KEY || !SERVER || !AUDIENCE_ID) {
+    console.error('Missing env vars:', { API_KEY: !!API_KEY, SERVER: !!SERVER, AUDIENCE_ID: !!AUDIENCE_ID });
+    return res.status(500).json({ success: false, error: 'Server configuration error.' });
+  }
+
+  const url = `https://${SERVER}.api.mailchimp.com/3.0/lists/${AUDIENCE_ID}/members`;
+  const auth = Buffer.from(`anystring:${API_KEY}`).toString('base64');
+
   try {
-    await mailchimp.lists.addListMember(process.env.MAILCHIMP_AUDIENCE_ID, {
-      email_address: email,
-      status: 'subscribed',
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email_address: email,
+        status: 'subscribed',
+      }),
     });
 
-    return res.status(200).json({ success: true });
-  } catch (error) {
-    const errorBody = error.response && error.response.body;
-    if (errorBody && errorBody.title === 'Member Exists') {
+    const data = await response.json();
+
+    if (response.ok) {
+      return res.status(200).json({ success: true });
+    }
+
+    if (data.title === 'Member Exists') {
       return res.status(200).json({ success: true, message: 'Already subscribed' });
     }
 
-    console.error('Mailchimp error:', JSON.stringify(errorBody || error.message || error));
+    console.error('Mailchimp error:', JSON.stringify(data));
+    return res.status(500).json({ success: false, error: 'Something went wrong. Please try again.' });
+  } catch (error) {
+    console.error('Fetch error:', error.message);
     return res.status(500).json({ success: false, error: 'Something went wrong. Please try again.' });
   }
 };
