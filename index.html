@@ -574,10 +574,36 @@ function closeMenu() {
 }
 
 // ─── Waitlist form ───────────────────────────────────────────────────────────────────
-function handleWaitlist(e) {
+async function handleWaitlist(e) {
   e.preventDefault();
-  document.getElementById('waitlistForm').style.display = 'none';
-  document.getElementById('waitlistSuccess').style.display = 'block';
+  var form = e.target;
+  var email = form.querySelector('input[type="email"]').value;
+  var btn = form.querySelector('.submit-btn');
+
+  btn.disabled = true;
+  btn.textContent = 'Joining...';
+
+  try {
+    var res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    });
+    var data = await res.json();
+
+    if (data.success) {
+      document.getElementById('waitlistForm').style.display = 'none';
+      document.getElementById('waitlistSuccess').style.display = 'block';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Join the Waitlist';
+      alert(data.error || 'Something went wrong. Please try again.');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Join the Waitlist';
+    alert('Network error. Please try again.');
+  }
 }
 </script>
 

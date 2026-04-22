@@ -652,10 +652,37 @@ function closeMenu() {
 })();
 
 // ─── Contact form ─────────────────────────────────────
-function handleContact(e) {
+async function handleContact(e) {
   e.preventDefault();
-  document.getElementById('contactForm').style.display = 'none';
-  document.getElementById('contactSuccess').style.display = 'block';
+  var form = e.target;
+  var email = form.querySelector('input[name="email"]').value;
+  var message = form.querySelector('textarea[name="message"]').value;
+  var btn = form.querySelector('.contact-submit');
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    var res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, message: message })
+    });
+    var data = await res.json();
+
+    if (data.success) {
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('contactSuccess').style.display = 'block';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Send';
+      alert(data.error || 'Something went wrong. Please try again.');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Send';
+    alert('Network error. Please try again.');
+  }
 }
 </script>
 
