@@ -11,10 +11,16 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ success: false, error: 'Email and message are required' });
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('RESEND_API_KEY not configured');
+    return res.status(500).json({ success: false, error: 'Server configuration error.' });
+  }
+
+  const resend = new Resend(apiKey);
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Rooh Contact Form <noreply@navuraah.com>',
       to: 'hello@navuraah.com',
       replyTo: email,
@@ -22,8 +28,10 @@ module.exports = async function handler(req, res) {
       text: `From: ${email}\n\n${message}`,
     });
 
+    console.log('Resend result:', JSON.stringify(result));
     return res.status(200).json({ success: true });
   } catch (error) {
+    console.error('Resend error:', JSON.stringify(error.message || error));
     return res.status(500).json({ success: false, error: 'Something went wrong. Please try again.' });
   }
 };
