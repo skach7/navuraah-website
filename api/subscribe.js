@@ -24,10 +24,12 @@ module.exports = async function handler(req, res) {
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    if (error.response && error.response.body && error.response.body.title === 'Member Exists') {
+    const errorBody = error.response && error.response.body;
+    if (errorBody && errorBody.title === 'Member Exists') {
       return res.status(200).json({ success: true, message: 'Already subscribed' });
     }
 
+    console.error('Mailchimp error:', JSON.stringify(errorBody || error.message || error));
     return res.status(500).json({ success: false, error: 'Something went wrong. Please try again.' });
   }
 };
