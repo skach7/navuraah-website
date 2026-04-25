@@ -612,9 +612,15 @@
 
 // ─── Mobile menu ───────────────────────────────────────
 function toggleMenu() {
+  var nav = document.getElementById('nav');
   document.querySelector('.hamburger').classList.toggle('active');
   document.querySelector('.nav-links').classList.toggle('open');
-  document.body.style.overflow = document.querySelector('.nav-links').classList.contains('open') ? 'hidden' : '';
+  var isOpen = document.querySelector('.nav-links').classList.contains('open');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+  if (isOpen) {
+    nav.style.transform = 'translateY(0)';
+    nav.style.opacity = '1';
+  }
 }
 function closeMenu() {
   document.querySelector('.hamburger').classList.remove('active');
