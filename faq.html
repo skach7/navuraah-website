@@ -573,8 +573,10 @@
 // ─── Nav scroll blur ───────────────────────────────────
 (function() {
   const nav = document.getElementById('nav');
+  var lastY = 0;
   window.addEventListener('scroll', function() {
-    if (window.scrollY > 40) {
+    var y = window.scrollY;
+    if (y > 40) {
       nav.style.background = 'rgba(26,16,64,0.92)';
       nav.style.backdropFilter = 'blur(16px)';
       nav.style.borderBottom = '1px solid rgba(168,155,194,0.1)';
@@ -583,6 +585,16 @@
       nav.style.backdropFilter = 'none';
       nav.style.borderBottom = 'none';
     }
+    if (!document.querySelector('.nav-links').classList.contains('open')) {
+      if (y > lastY && y > 80) {
+        nav.style.transform = 'translateY(-100%)';
+        nav.style.opacity = '0';
+      } else {
+        nav.style.transform = 'translateY(0)';
+        nav.style.opacity = '1';
+      }
+    }
+    lastY = y;
   }, {passive: true});
 })();
 
