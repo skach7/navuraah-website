@@ -4,6 +4,25 @@ All notable changes to the Rooh by Navu Raah website.
 
 ---
 
+## 2026-04-21 — FAQ Page + Homepage Nav Update
+**Commit:** `ff91374` (PR #1 merged via `eefd3a6`)
+
+- New standalone FAQ page (`faq.html`) — vanilla HTML/CSS/JS, 42KB (converted from 308KB React/Babel source)
+- 23 questions across 5 sections: About Rooh, The Stories, Voice Cloning, Safety & Privacy, Pricing & Plans
+- Accordion with one-open-at-a-time behavior, smooth max-height transitions
+- Sticky sidebar "Jump to" navigation with scroll-based active highlighting
+- Contact form (email + message) with "Didn't find your answer?" CTA strip
+- Waitlist promo card alongside contact form
+- Pricing answers set to "Coming soon" placeholders (strategy pending)
+- Removed "Is the voice data safe?" question, rewrote voice quality answer (no ElevenLabs mention)
+- All copy is dash-free, no Urdu letters
+- "Questions & Answers" pill badge with subtle green border
+- Fully mobile responsive (768px + 480px breakpoints), sidebar hides on mobile
+- Starfield, nav blur, hamburger menu, footer all match homepage
+- Added FAQ link to homepage navigation bar (`index.html`)
+
+---
+
 ## 2026-04-20 — Rotating Headline, Icon Refresh, Copy Refinements
 **Commit:** `6313b4e`
 
@@ -43,7 +62,19 @@ All notable changes to the Rooh by Navu Raah website.
 
 ---
 
+## 2026-04-22 — Mailchimp Waitlist + Resend Contact Form
+**Commits:** `61d4c19` (PR #2), `d6b1e72` (PR #3), `eb4bfbd` (PR #4)
+
+- Integrated Mailchimp API for waitlist email collection (serverless function: `api/subscribe.js`)
+- Integrated Resend API for contact form submissions (serverless function: `api/contact.js`)
+- Added error logging to serverless functions
+- Switched to raw fetch for both Mailchimp and Resend APIs for reliability
+- Both forms on homepage and FAQ page are now fully functional
+
+---
+
 ## Pending
-- [ ] Mailchimp waitlist integration (need account + form URL)
-- [ ] New sections (Stories/Testimonials, FAQ, etc.)
+- [ ] FAQ mobile responsiveness QA (manual check pending)
+- [ ] New sections (Stories/Testimonials on homepage)
+- [ ] Pricing page (HTML file exists, strategy pending)
 - [ ] Content updates (user to provide specifics)
