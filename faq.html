@@ -587,10 +587,10 @@
     }
     if (!document.querySelector('.nav-links').classList.contains('open')) {
       if (y > lastY && y > 80) {
-        nav.style.transform = 'translateY(-100%)';
+        nav.style.top = '-80px';
         nav.style.opacity = '0';
       } else {
-        nav.style.transform = 'translateY(0)';
+        nav.style.top = '0';
         nav.style.opacity = '1';
       }
     }
@@ -618,7 +618,7 @@ function toggleMenu() {
   var isOpen = document.querySelector('.nav-links').classList.contains('open');
   document.body.style.overflow = isOpen ? 'hidden' : '';
   if (isOpen) {
-    nav.style.transform = 'translateY(0)';
+    nav.style.top = '0';
     nav.style.opacity = '1';
   }
 }
