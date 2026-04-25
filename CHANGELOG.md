@@ -4,6 +4,43 @@ All notable changes to the Rooh by Navu Raah website.
 
 ---
 
+## 2026-04-25 — Revised Website Copy (V2)
+**Commit:** `b8c15c4`
+
+22 copy changes across index.html and faq.html based on "revise website v1" handoff doc:
+
+**Homepage (index.html):**
+- Page title + meta/OG/Twitter tags: removed "Bedtime", updated descriptions
+- Hero badge "Launching July 2026" removed from hero, moved to waitlist section as urgency
+- Added memorial subtitle below H1: "Even if she is far away. Even if she is gone."
+- Hero subheading rewritten to remove bedtime constraint, hint at memorial use case
+- Tagline strip: "Parent speaks · Rooh listens · Story begins" → "Your words · Her voice · Their dream"
+- How It Works heading: "bedtime to adventure" → "their day to their adventure"
+- Step 01 body: positive examples first (triumph, joy before worry)
+- Features heading: "Built for the 9 pm moment" → "Built for the moments that matter"
+- Moral storytelling card: "Values through consequence" → "Wisdom, woven in" with lyrical body copy
+- Voice cloning headline: "What if Dadi could..." → "Dadi tucks them in." (confident, active)
+- Voice cloning body: explicitly names memorial use case, "that moment" replaces "that night"
+- Waitlist headline: "Be there for the first story" → "Your child's first story is waiting"
+- Added launch date urgency line in waitlist section
+- Nav: "Stories" → "Hear It"
+- Footer: updated tagline + added "Rooh is a product by Navu Raah" brand line
+
+**FAQ (faq.html):**
+- Hero H1: "Everything parents want to know" → "You have questions. We have thought about every one."
+- "What is Rooh?": removed "bedtime" from definition
+- "Who is Rooh for?": expanded to "at bedtime, naptime, or any quiet moment in between"
+- "Who built Rooh?": removed "14 development sessions", reframed as founder story
+- "How does the story work?": replaced "consequence is felt" with warmer language
+- "How are morals handled?": aligned with "Wisdom, woven in" positioning
+- Pricing: consolidated 4 "coming soon" Q&As into 2 directional answers
+- Contact form: added placeholder text, renamed button "Send" → "Ask Us"
+- Stats counter: 23 → 21 questions
+- Footer: updated to match homepage
+- Nav: "Stories" → "Hear It" (consistent with homepage)
+
+---
+
 ## 2026-04-21 — FAQ Page + Homepage Nav Update
 **Commit:** `ff91374` (PR #1 merged via `eefd3a6`)
 
@@ -76,5 +113,5 @@ All notable changes to the Rooh by Navu Raah website.
 ## Pending
 - [ ] FAQ mobile responsiveness QA (manual check pending)
 - [ ] New sections (Stories/Testimonials on homepage)
-- [ ] Pricing page (HTML file exists, strategy pending)
-- [ ] Content updates (user to provide specifics)
+- [ ] Pricing page (strategy pending)
+- [ ] "Hear It" section content (nav link exists, no section yet)

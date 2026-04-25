@@ -105,11 +105,24 @@
     .hero-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 12px 40px #f59e0b66 !important; }
     .hero-ghost:hover { color: #fdf4e7 !important; border-color: rgba(253,244,231,0.4) !important; }
     .submit-btn:hover { background: #fbbf24 !important; }
+
+    /* Back to top button */
+    .back-to-top {
+      position: fixed; bottom: 32px; right: 32px; z-index: 900;
+      width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(26,16,64,0.7); backdrop-filter: blur(12px);
+      color: #f59e0b; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .back-to-top:hover { transform: translateY(-3px); background: rgba(45,27,105,0.8); }
     .waitlist-form input::placeholder { color: #a89bc2; }
 
     /* ─── Mobile Nav ─── */
     .nav-links { display: flex; gap: 36px; align-items: center; }
-    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 101; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
     .hamburger span { display: block; width: 22px; height: 2px; background: #fdf4e7; margin: 5px 0; border-radius: 1px; transition: all 0.3s; }
     .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
     .hamburger.active span:nth-child(2) { opacity: 0; }
@@ -117,11 +130,12 @@
 
     /* ─── Tablet & Phone ─── */
     @media (max-width: 768px) {
+      #nav { padding: 14px 20px !important; }
       .hamburger { display: block; }
       .nav-links {
         display: none; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         background: rgba(26,16,64,0.97); backdrop-filter: blur(20px);
-        justify-content: center; align-items: center; gap: 32px; z-index: 100;
+        justify-content: center; align-items: center; gap: 32px; z-index: 1000;
       }
       .nav-links.open { display: flex; }
       .nav-links .nav-link { font-size: 20px !important; color: #fdf4e7 !important; }
@@ -148,9 +162,13 @@
       .feature-cell { border-right: none !important; }
 
       /* Voice Callout */
+      .voice-callout-section { padding: 40px 20px !important; }
       .voice-callout-inner { flex-direction: column !important; padding: 36px 20px !important; gap: 24px !important; }
       .voice-callout-heading { font-size: 28px !important; }
       .voice-callout-heading br { display: none; }
+      .voice-callout-body { max-width: 100% !important; }
+      .voice-play-row { flex-wrap: wrap !important; }
+      .voice-play-label { white-space: normal !important; font-size: 12px !important; }
 
       /* Waitlist */
       .waitlist-section { padding: 80px 20px !important; }
@@ -183,7 +201,7 @@
 <canvas id="starfield" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
 
 <!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
-<nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;">
+<nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;">
   <div style="display:flex;align-items:center;gap:10px;">
     <img src="rooh-soul.png" alt="Rooh" style="width:38px;height:38px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 8px #f59e0b66);" />
     <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;letter-spacing:0.04em;color:#fdf4e7;">Rooh</span>
@@ -223,10 +241,10 @@
       Tonight, <span id="lovedOne" style="color:#f59e0b;display:inline-block;min-width:120px;transition:opacity 0.4s ease;">Dadi</span> tells the story.
     </h1>
     <p style="font-family:'Cormorant Garamond',serif;font-size:32px;font-style:italic;font-weight:400;color:rgba(168,155,194,0.75);line-height:1.4;margin-bottom:24px;">
-      Even if she is far away. Even if she is gone.
+      Even if they are far away. Even if they are gone.
     </p>
     <p class="hero-subtitle" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;font-weight:400;color:#a89bc2;line-height:1.5;margin-bottom:40px;">
-      Every story, personalised to your child's day. Narrated in the voice of someone they already love — wherever that person may be.
+      Every story, personalised to your child's day. Narrated in the voice of someone they already love, wherever that person may be.
     </p>
   </div>
 
@@ -325,7 +343,7 @@
       <div style="font-family:'Cormorant Garamond';font-size:32px;color:#a89bc2;margin-bottom:24px;line-height:1;">⬡</div>
       <div style="font-family:'Nunito';font-size:11px;color:#a89bc2;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;margin-bottom:10px;">Moral storytelling</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;color:#fdf4e7;margin-bottom:14px;line-height:1.25;">Wisdom, woven in</div>
-      <p style="font-family:'Nunito';font-size:14px;color:#a89bc2;line-height:1.75;">Morals are never spoken aloud. They arrive through the story — in choices made, paths taken, and what the hero quietly learns.</p>
+      <p style="font-family:'Nunito';font-size:14px;color:#a89bc2;line-height:1.75;">Morals are never spoken aloud. They arrive through the story, in choices made, paths taken, and what the hero quietly learns.</p>
     </div>
 
     <div class="feature-cell" style="padding:48px 40px;border-top:1px solid rgba(168,155,194,0.12);border-right:1px solid rgba(168,155,194,0.12);">
@@ -353,7 +371,7 @@
 </section>
 
 <!-- ════════════════════════════════════ VOICE CALLOUT ════════════════════════════════ -->
-<section style="padding:80px 48px;position:relative;z-index:1;overflow:hidden;">
+<section class="voice-callout-section" style="padding:80px 48px;position:relative;z-index:1;overflow:hidden;">
   <div class="voice-callout-inner" style="max-width:960px;margin:0 auto;background:linear-gradient(135deg, #2d1b69 0%, #1f1354 100%);border-radius:32px;padding:72px 80px;border:1px solid rgba(245,158,11,0.2);box-shadow:0 40px 100px rgba(245,158,11,0.08);display:flex;gap:80px;align-items:center;position:relative;overflow:hidden;">
 
     <!-- Background glow -->
@@ -364,13 +382,13 @@
       <h2 class="voice-callout-heading" style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:500;line-height:1.1;color:#fdf4e7;margin-top:12px;margin-bottom:20px;">
         Dadi tucks them in.<br/><em style="color:#f59e0b;font-style:italic;">Every single night.</em>
       </h2>
-      <p style="font-family:'Nunito';font-size:15px;color:#a89bc2;line-height:1.8;max-width:440px;">
-        Record just three short prompts from anyone your child loves — a grandparent, a parent, even someone no longer here. Rooh clones their voice. From that moment forward, every story is told by someone your child already trusts.
+      <p class="voice-callout-body" style="font-family:'Nunito';font-size:15px;color:#a89bc2;line-height:1.8;max-width:440px;">
+        Record just three short prompts from anyone your child loves. A grandparent, a parent, even someone no longer here. Rooh clones their voice. From that moment forward, every story is told by someone your child already trusts.
       </p>
-      <div style="margin-top:36px;display:flex;align-items:center;gap:16px;">
+      <div class="voice-play-row" style="margin-top:36px;display:flex;align-items:center;gap:16px;">
         <button id="playBtn" onclick="togglePlay(this)" style="width:52px;height:52px;border-radius:50%;background:#f59e0b;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.2s;box-shadow:0 0 20px #f59e0b66;flex-shrink:0;">▶</button>
         <div id="voiceWave" style="display:flex;align-items:center;gap:2px;height:36px;"></div>
-        <span style="font-family:'Nunito';font-size:13px;color:#a89bc2;white-space:nowrap;">Dadi narrating "The Lost Star"</span>
+        <span class="voice-play-label" style="font-family:'Nunito';font-size:13px;color:#a89bc2;white-space:nowrap;">Dadi narrating "The Lost Star"</span>
       </div>
     </div>
 
@@ -425,6 +443,9 @@
   </div>
 </section>
 
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
 <!-- ═══════════════════════════════════════ FOOTER ════════════════════════════════════ -->
 <footer class="site-footer" style="padding:40px 48px;border-top:1px solid rgba(168,155,194,0.1);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">
   <div style="display:flex;align-items:center;gap:10px;">
@@ -434,8 +455,8 @@
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
     <a href="mailto:hello@navuraah.com" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">hello@navuraah.com</a>
-    <span style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.4);">© 2026 Navu Raah. Built with love, for every Indian family — wherever their loved ones are.</span>
-    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.3);margin-top:2px;">Rooh is a product by Navu Raah — a studio building AI experiences for Indian families.</span>
+    <span style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.4);">© 2026 Navu Raah. Built with love, for every Indian family, wherever their loved ones are.</span>
+    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.3);margin-top:2px;">Rooh is a product by Navu Raah, a studio building AI experiences for Indian families.</span>
   </div>
 </footer>
 
@@ -558,6 +579,18 @@ function togglePlay(btn) {
       el.style.opacity = '1';
     }, 400);
   }, 3500);
+})();
+
+// ─── Back to top ────────────────────────────────────────────────────────────────────
+(function() {
+  var btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }, {passive: true});
 })();
 
 // ─── Mobile menu ────────────────────────────────────────────────────────────────────
