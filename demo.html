@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rooh — See How It Works</title>
+
+  <meta name="description" content="Watch a real bedtime come to life with Rooh. Tap through an interactive demo." />
+  <link rel="icon" type="image/png" href="rooh-soul.png" />
+  <meta name="theme-color" content="#1a1040" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #0f0826;
+      color: #fdf4e7;
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2d1b69; border-radius: 2px; }
+
+    /* ─── Animations ─── */
+    @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.06); opacity: 1; } }
+    @keyframes orbRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes ringExpand { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(2.2); opacity: 0; } }
+    @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 40px 10px rgba(245,158,11,0.15); } 50% { box-shadow: 0 0 70px 20px rgba(245,158,11,0.28); } }
+    @keyframes orbGlow { 0%, 100% { filter: drop-shadow(0 0 30px rgba(245,158,11,0.3)) drop-shadow(0 0 60px rgba(107,158,126,0.15)); } 50% { filter: drop-shadow(0 0 50px rgba(245,158,11,0.5)) drop-shadow(0 0 90px rgba(107,158,126,0.25)); } }
+    @keyframes waveform { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+    @keyframes micPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.3); } 50% { box-shadow: 0 0 0 16px rgba(245,158,11,0); } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* ─── Layout ─── */
+    .page { display: flex; flex-direction: column; height: 100vh; position: relative; }
+    .starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+
+    /* ─── Nav ─── */
+    .demo-nav {
+      position: relative; z-index: 100; flex-shrink: 0;
+      height: 60px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      background: rgba(26,16,64,0.7); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(168,155,194,0.1);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-link { font-family: 'Nunito'; font-size: 13px; color: #a89bc2; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #fdf4e7; }
+    .nav-link.active { color: #fdf4e7; font-weight: 600; }
+    .nav-cta {
+      font-family: 'Nunito'; font-size: 12px; font-weight: 700; color: #1a1040;
+      background: #f59e0b; padding: 7px 20px; border-radius: 100px; text-decoration: none;
+      letter-spacing: 0.04em; box-shadow: 0 4px 16px #f59e0b44; transition: all 0.2s;
+    }
+    .nav-cta:hover { background: #fbbf24; }
+    .nav-links-desktop { display: flex; gap: 28px; align-items: center; }
+
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fdf4e7; margin: 5px 0; border-radius: 1px; transition: all 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .nav-mobile-overlay {
+      display: none; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(26,16,64,0.97); backdrop-filter: blur(20px);
+      justify-content: center; align-items: center; gap: 32px; z-index: 1000;
+    }
+    .nav-mobile-overlay.open { display: flex; }
+    .nav-mobile-overlay .nav-link { font-size: 20px; color: #fdf4e7; }
+    .nav-mobile-overlay .nav-cta { font-size: 16px; padding: 12px 32px; }
+
+    /* ─── Stage ─── */
+    .stage {
+      flex: 1; display: flex; position: relative; z-index: 1; overflow: hidden;
+      align-items: center; justify-content: center;
+      padding: 24px 48px; gap: 56px;
+    }
+
+    /* ─── iPhone Frame (CSS-only) ─── */
+    .iphone-wrap { flex-shrink: 0; position: relative; }
+    .iphone-glow {
+      position: absolute; top: -40px; left: -40px; right: -40px; bottom: -40px;
+      border-radius: 50%; background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .iphone {
+      position: relative; z-index: 1;
+      border-radius: 50px; overflow: hidden;
+      background: #000; border: 3px solid #2a2a3e;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05) inset;
+    }
+    .iphone-notch {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 32px; background: #000; border-radius: 20px; z-index: 10;
+    }
+    .iphone-status {
+      height: 54px; flex-shrink: 0; position: relative; z-index: 5;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 28px 6px;
+    }
+    .iphone-status-time { font-family: 'Nunito'; font-size: 13px; font-weight: 700; color: #fdf4e7; }
+    .iphone-status-icons { display: flex; gap: 5px; align-items: center; }
+    .iphone-status-icons span { font-size: 11px; color: #fdf4e7; }
+    .iphone-home {
+      height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .iphone-home-bar {
+      width: 130px; height: 4px; border-radius: 2px; background: rgba(253,244,231,0.3);
+    }
+    .iphone-content {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0;
+    }
+
+    /* ─── Screens (inside phone) ─── */
+    .screen { display: none; flex: 1; flex-direction: column; animation: fadeIn 0.3s ease both; }
+    .screen.active { display: flex; }
+
+    /* Screen backgrounds */
+    .screen-home { background: linear-gradient(180deg,#0f0826 0%,#1a1040 60%,#0f0826 100%); align-items: center; justify-content: space-between; padding: 20px 20px 36px; }
+    .screen-speak { background: linear-gradient(180deg,#0f0826 0%,#1a1040 100%); padding: 16px 16px 28px; }
+    .screen-generating { background: linear-gradient(180deg,#0f0826 0%,#1a1040 100%); align-items: center; justify-content: center; padding: 20px; }
+    .screen-story { background: linear-gradient(180deg,#0f0826 0%,#130d33 100%); padding: 14px 16px 24px; }
+    .screen-end { background: linear-gradient(180deg,#0f0826 0%,#1a1040 100%); align-items: center; justify-content: center; padding: 24px 20px; text-align: center; }
+
+    /* ─── Waveform ─── */
+    .waveform { display: flex; align-items: center; gap: 2; justify-content: center; }
+    .waveform-bar {
+      width: 3px; border-radius: 2px; background: #f59e0b; transform-origin: center;
+      transition: height 0.4s ease;
+    }
+    .waveform.active .waveform-bar { animation-name: waveform; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+
+    /* ─── Sidebar (desktop) ─── */
+    .sidebar { max-width: 300px; animation: fadeUp 0.6s ease 0.2s both; }
+    .sidebar-step {
+      display: flex; align-items: flex-start; gap: 16px; background: none;
+      border: none; cursor: pointer; padding: 14px 0; text-align: left; width: 100%;
+      border-bottom: 1px solid rgba(168,155,194,0.07);
+    }
+    .sidebar-step:last-child { border-bottom: none; }
+    .sidebar-step .step-circle {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+      margin-top: 3px;
+    }
+    .sidebar-step .step-line { width: 1px; height: 24px; margin-top: 4px; transition: background 0.3s; }
+
+    /* ─── Mobile bottom nav ─── */
+    .mobile-bottom {
+      display: none; flex-shrink: 0; height: 72px;
+      align-items: center; justify-content: center; gap: 0;
+      background: rgba(26,16,64,0.6); backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(168,155,194,0.08); padding: 0 12px;
+      position: relative; z-index: 10;
+    }
+    .mobile-bottom-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 4;
+      background: none; border: none; cursor: pointer; padding: 8px 12px; flex: 1; max-width: 80px;
+    }
+    .mobile-bottom-dot {
+      height: 7px; border-radius: 4px; transition: all 0.35s ease;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .demo-nav { height: 52px; padding: 0 20px; }
+      .nav-links-desktop { display: none; }
+      .hamburger { display: block; }
+      .stage { flex-direction: column; padding: 24px 0 0; gap: 0; }
+      .sidebar { display: none; }
+      .mobile-bottom { display: flex; }
+      .iphone { border-radius: 40px; }
+      .iphone-notch { width: 100px; height: 28px; top: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <canvas class="starfield" id="starfield"></canvas>
+
+  <!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+  <nav class="demo-nav">
+    <a href="index.html" class="nav-brand">
+      <img src="rooh-soul.png" alt="Rooh" style="width:30px;height:30px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 8px #f59e0b66);" />
+      <span style="font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:#fdf4e7;letter-spacing:0.04em;">Rooh</span>
+      <span style="font-family:'Nunito';font-size:10px;color:#a89bc2;letter-spacing:0.12em;text-transform:uppercase;margin-top:1px;" class="nav-byline">by Navu Raah</span>
+    </a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links-desktop">
+      <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+      <a href="index.html#features" class="nav-link">Features</a>
+      <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="feedback.html" class="nav-link">Feedback</a>
+      <a href="demo.html" class="nav-link active">Demo</a>
+      <a href="index.html#waitlist" class="nav-cta">Join Waitlist</a>
+    </div>
+    <div class="nav-mobile-overlay" id="mobileNav">
+      <a href="index.html#how-it-works" class="nav-link" onclick="closeMenu()">How It Works</a>
+      <a href="index.html#features" class="nav-link" onclick="closeMenu()">Features</a>
+      <a href="faq.html" class="nav-link" onclick="closeMenu()">FAQ</a>
+      <a href="feedback.html" class="nav-link" onclick="closeMenu()">Feedback</a>
+      <a href="demo.html" class="nav-link active" onclick="closeMenu()">Demo</a>
+      <a href="index.html#waitlist" class="nav-cta" onclick="closeMenu()">Join Waitlist</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════ STAGE ═══════════════════════════ -->
+  <div class="stage">
+
+    <!-- iPhone -->
+    <div class="iphone-wrap">
+      <div class="iphone-glow"></div>
+      <div class="iphone" id="iphone">
+        <div class="iphone-notch"></div>
+        <div style="height:100%;display:flex;flex-direction:column;">
+          <div class="iphone-status">
+            <span class="iphone-status-time">9:07</span>
+            <div class="iphone-status-icons">
+              <span>&#9679;</span><span>&#9679;</span><span>&#9679;</span>
+            </div>
+          </div>
+          <div class="iphone-content">
+
+            <!-- Screen 0: Home -->
+            <div class="screen screen-home active" id="screen-0">
+              <div style="text-align:center;margin-top:8px;">
+                <p style="font-family:'Nunito';font-size:11px;color:#a89bc2;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">Good evening</p>
+                <p style="font-family:'Cormorant Garamond',serif;font-size:12px;color:rgba(168,155,194,0.4);margin-top:2px;font-style:italic;">Wednesday &middot; 9:07 pm</p>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:14px;flex:1;justify-content:center;">
+                <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+                  <div style="position:absolute;border-radius:50%;width:116px;height:116px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 3s ease-out 0s infinite;"></div>
+                  <div style="position:absolute;border-radius:50%;width:116px;height:116px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 3s ease-out 1.5s infinite;"></div>
+                  <img src="rooh-soul.png" alt="Rooh" style="width:96px;height:96px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite, orbGlow 4s ease-in-out infinite;" />
+                </div>
+                <p style="font-family:'Cormorant Garamond',serif;font-size:19px;color:#fdf4e7;font-weight:400;font-style:italic;text-align:center;line-height:1.4;max-width:260px;">
+                  What shall Aryan's adventure be tonight?
+                </p>
+              </div>
+              <button onclick="goToScreen(1)" style="width:100%;padding:15px;background:#f59e0b;border-radius:100px;border:none;cursor:pointer;font-family:'Nunito';font-size:14px;font-weight:800;color:#1a1040;letter-spacing:0.04em;box-shadow:0 8px 24px rgba(245,158,11,0.4);animation:glowPulse 3s ease-in-out infinite;">
+                Begin tonight's story
+              </button>
+            </div>
+
+            <!-- Screen 1: Speak -->
+            <div class="screen screen-speak" id="screen-1">
+              <div style="margin-bottom:16px;">
+                <p style="font-family:'Nunito';font-size:10px;color:#f59e0b;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Step 1 of 3</p>
+                <p style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#fdf4e7;font-weight:500;margin-top:4px;line-height:1.3;">What happened today?</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:16px;">
+                <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite;flex-shrink:0;margin-top:2px;" />
+                <div style="background:rgba(45,27,105,0.8);border-radius:14px 14px 14px 4px;padding:10px 14px;flex:1;">
+                  <p style="font-family:'Nunito';font-size:12px;color:#fdf4e7;line-height:1.6;">Tell me about Aryan's day, anything at all.</p>
+                </div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;">
+                <!-- Phase 0: Mic button -->
+                <div id="speak-mic" style="text-align:center;">
+                  <button onclick="startTyping()" style="width:68px;height:68px;border-radius:50%;background:rgba(245,158,11,0.15);border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto;animation:micPulse 2s ease-in-out infinite;">
+                    <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                      <rect x="9" y="2" width="10" height="16" rx="5" fill="#f59e0b"/>
+                      <path d="M4 14C4 19.5 8.5 24 14 24C19.5 24 24 19.5 24 14" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+                      <line x1="14" y1="24" x2="14" y2="27" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                  <p style="font-family:'Nunito';font-size:11px;color:#a89bc2;margin-top:10px;">Tap to speak</p>
+                </div>
+                <!-- Phase 1: Typing -->
+                <div id="speak-typing" style="display:none;width:100%;text-align:center;">
+                  <div class="waveform active" id="speak-waveform" style="height:28px;margin-bottom:14px;"></div>
+                  <div style="background:rgba(45,27,105,0.6);border-radius:14px;padding:12px 14px;text-align:left;">
+                    <p style="font-family:'Nunito';font-size:12px;color:#fdf4e7;line-height:1.6;min-height:36px;">
+                      <span id="speak-transcript"></span><span style="opacity:0.5;animation:blink 0.8s ease-in-out infinite;">|</span>
+                    </p>
+                  </div>
+                </div>
+                <!-- Phase 2: Response -->
+                <div id="speak-response" style="display:none;width:100%;">
+                  <div style="background:rgba(45,27,105,0.7);border-radius:14px;padding:12px 14px;margin-bottom:14px;border:1px solid rgba(245,158,11,0.2);">
+                    <p style="font-family:'Nunito';font-size:12px;color:#fdf4e7;line-height:1.6;" id="speak-full-text"></p>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:flex-start;">
+                    <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite;flex-shrink:0;margin-top:2px;" />
+                    <div style="background:rgba(45,27,105,0.8);border-radius:14px 14px 14px 4px;padding:10px 14px;flex:1;">
+                      <p style="font-family:'Nunito';font-size:12px;color:#fdf4e7;line-height:1.6;">
+                        That sounds like <span style="color:#f59e0b;font-weight:700;">friendship</span> and <span style="color:#f59e0b;font-weight:700;">courage to say sorry</span>. Shall we weave those in?
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Next button (appears after response) -->
+              <button id="speak-next-btn" onclick="goToScreen(2)" style="display:none;width:100%;padding:14px;background:#f59e0b;border-radius:100px;border:none;cursor:pointer;font-family:'Nunito';font-size:14px;font-weight:800;color:#1a1040;letter-spacing:0.04em;box-shadow:0 6px 20px rgba(245,158,11,0.35);animation:slideUp 0.4s ease both, glowPulse 3s ease-in-out infinite;">
+                Yes, begin the story
+              </button>
+            </div>
+
+            <!-- Screen 2: Generating -->
+            <div class="screen screen-generating" id="screen-2">
+              <div style="position:relative;margin-bottom:28px;">
+                <div style="position:absolute;border-radius:50%;width:120px;height:120px;top:50%;left:50%;margin-top:-60px;margin-left:-60px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 2.5s ease-out 0s infinite;"></div>
+                <div style="position:absolute;border-radius:50%;width:120px;height:120px;top:50%;left:50%;margin-top:-60px;margin-left:-60px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 2.5s ease-out 0.8s infinite;"></div>
+                <div style="position:absolute;border-radius:50%;width:120px;height:120px;top:50%;left:50%;margin-top:-60px;margin-left:-60px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 2.5s ease-out 1.6s infinite;"></div>
+                <img src="rooh-soul.png" alt="Rooh" style="width:100px;height:100px;animation:breathe 2.5s ease-in-out infinite, orbRotate 24s linear infinite, orbGlow 2.5s ease-in-out infinite;position:relative;z-index:2;" />
+              </div>
+              <p style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#fdf4e7;font-style:italic;margin-bottom:28px;text-align:center;line-height:1.4;">Rooh is writing tonight's adventure...</p>
+              <div style="width:100%;display:flex;flex-direction:column;gap:10px;" id="gen-steps">
+                <div class="gen-step" data-i="0"><div class="gen-circle"></div><span>Understanding Aryan's day...</span></div>
+                <div class="gen-step" data-i="1"><div class="gen-circle"></div><span>Choosing a magical world...</span></div>
+                <div class="gen-step" data-i="2"><div class="gen-circle"></div><span>Placing Kabir in the story...</span></div>
+                <div class="gen-step" data-i="3"><div class="gen-circle"></div><span>Weaving friendship and courage...</span></div>
+                <div class="gen-step" data-i="4"><div class="gen-circle"></div><span>Preparing Dadi's voice...</span></div>
+              </div>
+            </div>
+
+            <!-- Screen 3: Story -->
+            <div class="screen screen-story" id="screen-3">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                <img src="rooh-soul.png" alt="Rooh" style="width:28px;height:28px;animation:breathe 4s ease-in-out infinite;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <p style="font-family:'Cormorant Garamond',serif;font-size:14px;color:#fdf4e7;font-weight:500;line-height:1.2;">The Lost Star Valley</p>
+                  <p style="font-family:'Nunito';font-size:10px;color:#a89bc2;margin-top:1px;">Narrated by Dadi &middot; Aryan's adventure</p>
+                </div>
+                <div style="background:rgba(107,158,126,0.15);border:1px solid rgba(107,158,126,0.3);border-radius:100px;padding:3px 8px;font-family:'Nunito';font-size:9px;color:#6b9e7e;font-weight:700;letter-spacing:0.06em;">LIVE</div>
+              </div>
+              <div style="background:rgba(45,27,105,0.5);border-radius:14px;padding:14px;margin-bottom:12px;flex:1;overflow-y:auto;" id="story-text-area">
+                <p style="font-family:'Cormorant Garamond',serif;font-size:15px;color:#fdf4e7;line-height:1.7;font-style:italic;margin-bottom:10px;animation:slideUp 0.6s ease both;">
+                  The night Aryan discovered the Lost Star Valley, he hadn't meant to. He'd been sitting by the river, skipping stones, when the first star fell.
+                </p>
+                <p id="story-p2" style="display:none;font-family:'Cormorant Garamond',serif;font-size:15px;color:#fdf4e7;line-height:1.7;font-style:italic;margin-bottom:10px;animation:slideUp 0.6s ease both;">
+                  It landed just ahead of him, glowing like a warm coal. And beside it, was Kabir.
+                </p>
+                <p id="story-p3" style="display:none;font-family:'Cormorant Garamond',serif;font-size:15px;color:#fdf4e7;line-height:1.7;font-style:italic;animation:slideUp 0.6s ease both;">
+                  "You found one too," said Kabir quietly. He held up his own glowing star. "I think they're pieces of the same one."
+                </p>
+              </div>
+              <!-- Playback controls -->
+              <div id="story-playback" style="margin-bottom:10px;">
+                <div class="waveform active" id="story-waveform" style="height:20px;margin-bottom:8px;justify-content:center;"></div>
+                <div style="height:2px;background:rgba(168,155,194,0.15);border-radius:1px;margin-bottom:5px;">
+                  <div id="story-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:1px;transition:width 0.1s linear;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-family:'Nunito';font-size:10px;color:#a89bc2;" id="story-time">0:00</span>
+                  <button onclick="toggleStoryPlay()" style="background:none;border:none;cursor:pointer;font-family:'Nunito';font-size:10px;color:#f59e0b;font-weight:700;" id="story-play-btn">&#9208; Pause</button>
+                  <span style="font-family:'Nunito';font-size:10px;color:#a89bc2;">4:00</span>
+                </div>
+              </div>
+              <!-- Choices (appear when progress reaches 100%) -->
+              <div id="story-choices" style="display:none;animation:slideUp 0.5s ease both;">
+                <p style="font-family:'Cormorant Garamond',serif;font-size:13px;color:#f59e0b;font-style:italic;text-align:center;margin-bottom:10px;">Aryan must choose...</p>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                  <button onclick="makeChoice(1)" class="story-choice" style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;transition:all 0.2s;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:rgba(245,158,11,0.13);border:1px solid rgba(245,158,11,0.33);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Nunito';font-size:11px;font-weight:800;color:#f59e0b;">1</div>
+                    <span style="font-family:'Nunito';font-size:11px;color:#fdf4e7;line-height:1.4;">Search for where the stars fell from</span>
+                  </button>
+                  <button onclick="makeChoice(2)" class="story-choice" style="display:flex;align-items:center;gap:10px;background:rgba(107,158,126,0.07);border:1px solid rgba(107,158,126,0.2);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;transition:all 0.2s;">
+                    <div style="width:22px;height:22px;border-radius:50%;background:rgba(107,158,126,0.13);border:1px solid rgba(107,158,126,0.33);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Nunito';font-size:11px;font-weight:800;color:#6b9e7e;">2</div>
+                    <span style="font-family:'Nunito';font-size:11px;color:#fdf4e7;line-height:1.4;">Give his star to Kabir as a peace offering</span>
+                  </button>
+                </div>
+              </div>
+              <!-- After choice -->
+              <div id="story-chosen" style="display:none;background:rgba(107,158,126,0.12);border:1px solid rgba(107,158,126,0.25);border-radius:12px;padding:10px 14px;animation:slideUp 0.4s ease both;display:none;align-items:center;gap:8px;">
+                <div style="width:6px;height:6px;border-radius:50%;background:#6b9e7e;box-shadow:0 0 8px #6b9e7e;flex-shrink:0;"></div>
+                <span style="font-family:'Nunito';font-size:11px;color:#6b9e7e;">Aryan chose wisely. The story continues...</span>
+              </div>
+            </div>
+
+            <!-- Screen 4: End -->
+            <div class="screen screen-end" id="screen-4">
+              <div style="position:relative;margin-bottom:20px;">
+                <div style="position:absolute;border-radius:50%;width:96px;height:96px;top:50%;left:50%;margin-top:-48px;margin-left:-48px;border:1px solid rgba(107,158,126,0.25);animation:ringExpand 3s ease-out 0s infinite;"></div>
+                <div style="position:absolute;border-radius:50%;width:96px;height:96px;top:50%;left:50%;margin-top:-48px;margin-left:-48px;border:1px solid rgba(107,158,126,0.25);animation:ringExpand 3s ease-out 1.5s infinite;"></div>
+                <img src="rooh-soul.png" alt="Rooh" style="width:76px;height:76px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;position:relative;z-index:2;" />
+              </div>
+              <p style="font-family:'Cormorant Garamond',serif;font-size:21px;color:#fdf4e7;font-style:italic;line-height:1.5;margin-bottom:8px;">
+                Aryan fell asleep<br/>before the last word.
+              </p>
+              <p style="font-family:'Nunito';font-size:12px;color:#a89bc2;line-height:1.7;margin-bottom:24px;max-width:220px;">
+                He and Kabir returned the star together. Tomorrow, he'll say sorry.
+              </p>
+              <div style="background:rgba(45,27,105,0.6);border-radius:14px;padding:14px;width:100%;text-align:left;margin-bottom:16px;">
+                <p style="font-family:'Nunito';font-size:10px;color:#a89bc2;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;margin-bottom:8px;">Tonight's story</p>
+                <p style="font-family:'Cormorant Garamond',serif;font-size:15px;color:#fdf4e7;font-weight:500;margin-bottom:8px;">The Lost Star Valley</p>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <span style="font-family:'Nunito';font-size:10px;color:#f59e0b;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:100px;padding:3px 10px;">Friendship</span>
+                  <span style="font-family:'Nunito';font-size:10px;color:#f59e0b;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:100px;padding:3px 10px;">Courage to apologise</span>
+                </div>
+              </div>
+              <p style="font-family:'Nunito';font-size:11px;color:rgba(168,155,194,0.4);font-style:italic;">Narrated by Dadi &middot; saved to archive</p>
+            </div>
+
+          </div>
+          <div class="iphone-home"><div class="iphone-home-bar"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar (desktop) -->
+    <div class="sidebar" id="sidebar">
+      <div style="margin-bottom:28px;">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:500;color:#fdf4e7;line-height:1.1;margin-bottom:8px;">
+          Watch a bedtime<br/><em style="color:#f59e0b;font-style:italic;">come to life.</em>
+        </p>
+        <p style="font-family:'Nunito';font-size:13px;color:#a89bc2;line-height:1.7;">
+          Tap through a real evening with Rooh.
+        </p>
+      </div>
+      <div id="sidebar-steps"></div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <div class="mobile-bottom" id="mobileBottom"></div>
+</div>
+
+<!-- ═══════════════════════════ SCRIPTS ═══════════════════════════ -->
+<script>
+// ─── Config ──────────────────────────────────────────────────
+var STEPS = [
+  { id: 'home', label: 'Home', sub: 'Rooh greets you.' },
+  { id: 'speak', label: 'You speak', sub: 'Tell Rooh about today.' },
+  { id: 'generating', label: 'Rooh weaves', sub: 'The story is crafted.' },
+  { id: 'story', label: 'Story plays', sub: 'Dadi narrates.' },
+  { id: 'end', label: 'Sleep', sub: 'Archived.' }
+];
+var currentScreen = 0;
+var storyPlaying = true;
+var storyProgress = 0;
+var storyInterval = null;
+var genInterval = null;
+var typingInterval = null;
+
+// ─── Starfield ──────────────────────────────────────────────────
+(function() {
+  var canvas = document.getElementById('starfield');
+  var ctx = canvas.getContext('2d');
+  var w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  var stars = [];
+  for (var i = 0; i < 100; i++) {
+    stars.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.1 + 0.2, delay: Math.random() * 5, dur: Math.random() * 3 + 2 });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    var t = Date.now() / 1000;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var a = 0.1 + 0.5 * (0.5 + 0.5 * Math.sin((t + s.delay) / s.dur * Math.PI * 2));
+      ctx.beginPath(); ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(253,244,231,' + a + ')'; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── Phone sizing ──────────────────────────────────────────────────
+function sizePhone() {
+  var iphone = document.getElementById('iphone');
+  var isMobile = window.innerWidth < 900;
+  var navH = isMobile ? 52 : 60;
+  var bottomH = isMobile ? 72 : 0;
+  var padV = 24;
+  var padH = isMobile ? 16 : 48;
+  var sidebarW = isMobile ? 0 : 280;
+  var gapW = isMobile ? 0 : 56;
+  var availH = window.innerHeight - navH - bottomH - padV * 2;
+  var availW = window.innerWidth - padH * 2 - sidebarW - gapW;
+  var ASPECT = 402 / 874;
+  var phoneH = Math.min(availH, availW / ASPECT, 874);
+  var phoneW = Math.round(phoneH * ASPECT);
+  phoneH = Math.round(phoneH);
+  iphone.style.width = phoneW + 'px';
+  iphone.style.height = phoneH + 'px';
+}
+sizePhone();
+window.addEventListener('resize', sizePhone);
+
+// ─── Build waveform bars ──────────────────────────────────────────
+function buildWaveform(el, count, height) {
+  el.style.height = height + 'px';
+  for (var i = 0; i < count; i++) {
+    var bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    var h = Math.round(6 + Math.abs(Math.sin(i * 0.7)) * 16);
+    bar.style.height = h + 'px';
+    bar.style.animationDuration = (0.7 + (i % 5) * 0.13).toFixed(2) + 's';
+    bar.style.animationDelay = (i * 0.05).toFixed(2) + 's';
+    el.appendChild(bar);
+  }
+}
+buildWaveform(document.getElementById('speak-waveform'), 16, 28);
+buildWaveform(document.getElementById('story-waveform'), 24, 20);
+
+// ─── Build sidebar steps ──────────────────────────────────────────
+function buildSidebar() {
+  var container = document.getElementById('sidebar-steps');
+  container.innerHTML = '';
+  for (var i = 0; i < STEPS.length; i++) {
+    var btn = document.createElement('button');
+    btn.className = 'sidebar-step';
+    btn.dataset.i = i;
+    btn.onclick = (function(idx) { return function() { goToScreen(idx); }; })(i);
+
+    var circleDiv = document.createElement('div');
+    circleDiv.style.display = 'flex'; circleDiv.style.flexDirection = 'column';
+    circleDiv.style.alignItems = 'center'; circleDiv.style.flexShrink = '0';
+
+    var circle = document.createElement('div');
+    circle.className = 'step-circle';
+    updateCircle(circle, i);
+    circleDiv.appendChild(circle);
+
+    if (i < STEPS.length - 1) {
+      var line = document.createElement('div');
+      line.className = 'step-line';
+      line.style.background = currentScreen > i ? 'rgba(107,158,126,0.3)' : 'rgba(168,155,194,0.08)';
+      circleDiv.appendChild(line);
+    }
+
+    var textDiv = document.createElement('div');
+    textDiv.style.paddingBottom = i < STEPS.length - 1 ? '24px' : '0';
+    var title = document.createElement('p');
+    title.style.fontFamily = "'Cormorant Garamond', serif";
+    title.style.fontSize = '18px'; title.style.fontWeight = '500';
+    title.style.color = currentScreen === i ? '#fdf4e7' : 'rgba(168,155,194,0.4)';
+    title.style.lineHeight = '1.2'; title.style.marginBottom = '3px';
+    title.style.transition = 'color 0.3s';
+    title.textContent = STEPS[i].label;
+
+    var sub = document.createElement('p');
+    sub.style.fontFamily = "'Nunito'"; sub.style.fontSize = '12px';
+    sub.style.color = currentScreen === i ? '#a89bc2' : 'rgba(168,155,194,0.2)';
+    sub.style.transition = 'color 0.3s';
+    sub.textContent = STEPS[i].sub;
+
+    textDiv.appendChild(title); textDiv.appendChild(sub);
+    btn.appendChild(circleDiv); btn.appendChild(textDiv);
+    container.appendChild(btn);
+  }
+}
+
+function updateCircle(circle, i) {
+  if (currentScreen > i) {
+    circle.style.background = 'rgba(107,158,126,0.2)';
+    circle.style.border = '1px solid rgba(107,158,126,0.4)';
+    circle.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 4" stroke="#6b9e7e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  } else if (currentScreen === i) {
+    circle.style.background = '#f59e0b';
+    circle.style.border = '2px solid #f59e0b';
+    circle.innerHTML = '<span style="font-family:Nunito;font-size:10px;font-weight:800;color:#1a1040;">' + (i + 1) + '</span>';
+  } else {
+    circle.style.background = 'rgba(45,27,105,0.8)';
+    circle.style.border = '1px solid rgba(168,155,194,0.2)';
+    circle.innerHTML = '<span style="font-family:Nunito;font-size:10px;font-weight:800;color:#a89bc2;">' + (i + 1) + '</span>';
+  }
+}
+
+// ─── Build mobile bottom nav ──────────────────────────────────────
+function buildMobileNav() {
+  var container = document.getElementById('mobileBottom');
+  container.innerHTML = '';
+  for (var i = 0; i < STEPS.length; i++) {
+    var btn = document.createElement('button');
+    btn.className = 'mobile-bottom-btn';
+    btn.dataset.i = i;
+    btn.onclick = (function(idx) { return function() { goToScreen(idx); }; })(i);
+
+    var dot = document.createElement('div');
+    dot.className = 'mobile-bottom-dot';
+    dot.style.width = currentScreen === i ? '24px' : '7px';
+    dot.style.background = currentScreen === i ? '#f59e0b' : (currentScreen > i ? 'rgba(107,158,126,0.4)' : 'rgba(168,155,194,0.25)');
+    dot.style.boxShadow = currentScreen === i ? '0 0 10px rgba(245,158,11,0.4)' : 'none';
+    btn.appendChild(dot);
+
+    if (currentScreen === i) {
+      var label = document.createElement('span');
+      label.style.fontFamily = "'Nunito'"; label.style.fontSize = '9px';
+      label.style.color = '#f59e0b'; label.style.fontWeight = '700';
+      label.style.letterSpacing = '0.06em'; label.style.whiteSpace = 'nowrap';
+      label.textContent = STEPS[i].label;
+      btn.appendChild(label);
+    }
+    container.appendChild(btn);
+  }
+}
+
+// ─── Screen navigation ──────────────────────────────────────────
+function goToScreen(n) {
+  // Clear any running animations
+  if (typingInterval) { clearInterval(typingInterval); typingInterval = null; }
+  if (genInterval) { clearInterval(genInterval); genInterval = null; }
+  if (storyInterval) { clearInterval(storyInterval); storyInterval = null; }
+
+  // Hide all screens
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); }
+
+  currentScreen = n;
+
+  // Reset screen state
+  resetScreen(n);
+
+  // Show target
+  var target = document.getElementById('screen-' + n);
+  if (target) {
+    target.classList.add('active');
+    target.style.animation = 'none';
+    target.offsetHeight;
+    target.style.animation = '';
+  }
+
+  // Start screen-specific animations
+  if (n === 2) startGenerating();
+  if (n === 3) startStory();
+
+  buildSidebar();
+  buildMobileNav();
+}
+
+function resetScreen(n) {
+  if (n === 1) {
+    document.getElementById('speak-mic').style.display = '';
+    document.getElementById('speak-typing').style.display = 'none';
+    document.getElementById('speak-response').style.display = 'none';
+    document.getElementById('speak-next-btn').style.display = 'none';
+    document.getElementById('speak-transcript').textContent = '';
+  }
+  if (n === 2) {
+    var steps = document.querySelectorAll('.gen-step');
+    for (var i = 0; i < steps.length; i++) {
+      steps[i].style.opacity = '0.2';
+      var circle = steps[i].querySelector('.gen-circle');
+      circle.style.background = 'rgba(168,155,194,0.2)';
+      circle.innerHTML = '';
+    }
+  }
+  if (n === 3) {
+    storyProgress = 0; storyPlaying = true;
+    document.getElementById('story-progress-bar').style.width = '0%';
+    document.getElementById('story-time').textContent = '0:00';
+    document.getElementById('story-play-btn').innerHTML = '&#9208; Pause';
+    document.getElementById('story-p2').style.display = 'none';
+    document.getElementById('story-p3').style.display = 'none';
+    document.getElementById('story-playback').style.display = '';
+    document.getElementById('story-choices').style.display = 'none';
+    document.getElementById('story-chosen').style.display = 'none';
+  }
+}
+
+// ─── Screen 1: Typing animation ──────────────────────────────────
+var FULL_TEXT = "He argued with his friend Kabir at cricket today and felt really bad about it.";
+
+function startTyping() {
+  document.getElementById('speak-mic').style.display = 'none';
+  document.getElementById('speak-typing').style.display = '';
+  var transcript = document.getElementById('speak-transcript');
+  var charIndex = 0;
+  typingInterval = setInterval(function() {
+    charIndex++;
+    transcript.textContent = FULL_TEXT.slice(0, charIndex);
+    if (charIndex >= FULL_TEXT.length) {
+      clearInterval(typingInterval);
+      typingInterval = null;
+      setTimeout(showSpeakResponse, 500);
+    }
+  }, 38);
+}
+
+function showSpeakResponse() {
+  document.getElementById('speak-typing').style.display = 'none';
+  document.getElementById('speak-response').style.display = '';
+  document.getElementById('speak-full-text').textContent = FULL_TEXT;
+  document.getElementById('speak-next-btn').style.display = '';
+}
+
+// ─── Screen 2: Generating steps ──────────────────────────────────
+function startGenerating() {
+  var steps = document.querySelectorAll('.gen-step');
+  var current = 0;
+  // Show first step immediately
+  updateGenStep(steps, 0);
+  genInterval = setInterval(function() {
+    current++;
+    if (current < steps.length) {
+      updateGenStep(steps, current);
+    } else {
+      clearInterval(genInterval);
+      genInterval = null;
+      setTimeout(function() { goToScreen(3); }, 600);
+    }
+  }, 850);
+}
+
+function updateGenStep(steps, current) {
+  for (var i = 0; i < steps.length; i++) {
+    var step = steps[i];
+    var circle = step.querySelector('.gen-circle');
+    if (i < current) {
+      step.style.opacity = '1';
+      circle.style.background = '#6b9e7e';
+      circle.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else if (i === current) {
+      step.style.opacity = '1';
+      circle.style.background = '#f59e0b';
+      circle.innerHTML = '<div style="width:6px;height:6px;border-radius:50%;background:#1a1040;"></div>';
+      step.querySelector('span').style.color = '#fdf4e7';
+    } else {
+      step.style.opacity = '0.2';
+    }
+  }
+}
+
+// ─── Screen 3: Story playback ──────────────────────────────────
+function startStory() {
+  storyProgress = 0;
+  storyPlaying = true;
+  storyInterval = setInterval(function() {
+    if (!storyPlaying) return;
+    storyProgress += 0.45;
+    if (storyProgress >= 100) {
+      storyProgress = 100;
+      clearInterval(storyInterval);
+      storyInterval = null;
+      showStoryChoices();
+    }
+    updateStoryUI();
+  }, 80);
+}
+
+function updateStoryUI() {
+  document.getElementById('story-progress-bar').style.width = storyProgress + '%';
+  var totalSecs = (storyProgress / 100) * 4 * 60;
+  var mins = Math.floor(totalSecs / 60);
+  var secs = Math.floor(totalSecs % 60);
+  document.getElementById('story-time').textContent = mins + ':' + String(secs).padStart(2, '0');
+
+  if (storyProgress > 40) document.getElementById('story-p2').style.display = '';
+  if (storyProgress > 65) document.getElementById('story-p3').style.display = '';
+}
+
+function toggleStoryPlay() {
+  storyPlaying = !storyPlaying;
+  var btn = document.getElementById('story-play-btn');
+  btn.innerHTML = storyPlaying ? '&#9208; Pause' : '&#9654; Play';
+  var wf = document.getElementById('story-waveform');
+  if (storyPlaying) wf.classList.add('active'); else wf.classList.remove('active');
+}
+
+function showStoryChoices() {
+  document.getElementById('story-playback').style.display = 'none';
+  document.getElementById('story-choices').style.display = '';
+}
+
+function makeChoice(n) {
+  document.getElementById('story-choices').style.display = 'none';
+  var chosen = document.getElementById('story-chosen');
+  chosen.style.display = 'flex';
+  setTimeout(function() { goToScreen(4); }, 1000);
+}
+
+// ─── Mobile menu ──────────────────────────────────────────────────
+function toggleMenu() {
+  document.querySelector('.hamburger').classList.toggle('active');
+  document.getElementById('mobileNav').classList.toggle('open');
+  var isOpen = document.getElementById('mobileNav').classList.contains('open');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeMenu() {
+  document.querySelector('.hamburger').classList.remove('active');
+  document.getElementById('mobileNav').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── Gen step styles ──────────────────────────────────────────────
+(function() {
+  var style = document.createElement('style');
+  style.textContent = '.gen-step { display:flex; align-items:center; gap:12px; opacity:0.2; transition:opacity 0.5s; }' +
+    '.gen-step span { font-family:Nunito; font-size:12px; color:#a89bc2; transition:color 0.3s; }' +
+    '.gen-circle { width:18px; height:18px; border-radius:50%; flex-shrink:0; background:rgba(168,155,194,0.2); display:flex; align-items:center; justify-content:center; transition:all 0.4s; }';
+  document.head.appendChild(style);
+})();
+
+// ─── Init ──────────────────────────────────────────────────────
+buildSidebar();
+buildMobileNav();
+</script>
+</body>
+</html>
