@@ -19,6 +19,10 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Rooh | Stories in the Voice of Someone They Love" />
   <meta name="twitter:description" content="AI stories personalised to your child's real day, narrated by a loved one's cloned voice." />
+  <meta name="twitter:image" content="https://navuraah.com/rooh-soul.png" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://navuraah.com/" />
 
   <!-- Favicon + Theme -->
   <link rel="icon" type="image/png" href="rooh-soul.png" />
@@ -181,7 +185,9 @@
       .waitlist-form-inner .submit-btn { border-radius: 100px !important; margin: 0 !important; padding: 14px 24px !important; }
 
       /* Footer */
-      .site-footer { flex-direction: column !important; gap: 16px !important; text-align: center !important; padding: 32px 20px !important; }
+      .site-footer { padding: 32px 20px 24px !important; }
+      .site-footer > div:first-child { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
+      .site-footer nav { justify-content: center !important; }
     }
 
     /* ─── Small phones ─── */
@@ -198,7 +204,7 @@
 <body>
 
 <!-- Starfield canvas -->
-<canvas id="starfield" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
+<canvas id="starfield" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
 
 <!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
 <nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;">
@@ -449,16 +455,26 @@
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
 
 <!-- ═══════════════════════════════════════ FOOTER ════════════════════════════════════ -->
-<footer class="site-footer" style="padding:40px 48px;border-top:1px solid rgba(168,155,194,0.1);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 6px #f59e0b66);" />
-    <span style="font-family:'Cormorant Garamond';font-size:18px;color:#fdf4e7;font-weight:500;">Rooh</span>
-    <span style="font-family:'Nunito';font-size:11px;color:#a89bc244;letter-spacing:0.1em;">by Navu Raah</span>
-  </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+<footer class="site-footer" style="padding:48px 48px 32px;border-top:1px solid rgba(168,155,194,0.1);position:relative;z-index:1;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;">
+    <!-- Brand -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 6px #f59e0b66);" />
+      <span style="font-family:'Cormorant Garamond';font-size:18px;color:#fdf4e7;font-weight:500;">Rooh</span>
+      <span style="font-family:'Nunito';font-size:11px;color:#a89bc244;letter-spacing:0.1em;">by Navu Raah</span>
+    </div>
+    <!-- Nav -->
+    <nav style="display:flex;gap:24px;flex-wrap:wrap;">
+      <a href="faq.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">FAQ</a>
+      <a href="demo.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">Demo</a>
+      <a href="about.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">About</a>
+      <a href="feedback.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">Feedback</a>
+    </nav>
+    <!-- Contact -->
     <a href="mailto:hello@navuraah.com" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">hello@navuraah.com</a>
-    <span style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.4);">© 2026 Navu Raah. Built with love, for every Indian family, wherever their loved ones are.</span>
-    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.3);margin-top:2px;">Rooh is a product by Navu Raah, a studio building AI experiences for Indian families.</span>
+  </div>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(168,155,194,0.06);text-align:center;">
+    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.4);">&copy; 2026 Navu Raah &middot; <a href="#" style="color:rgba(168,155,194,0.4);text-decoration:none;">Privacy Policy</a> &middot; <a href="#" style="color:rgba(168,155,194,0.4);text-decoration:none;">Terms of Service</a></span>
   </div>
 </footer>
 

@@ -8,6 +8,12 @@
   <!-- SEO -->
   <meta name="description" content="Help shape Rooh — share your family's experience as a beta co-creator." />
   <meta property="og:image" content="https://navuraah.com/rooh-soul.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rooh | Feedback" />
+  <meta name="twitter:image" content="https://navuraah.com/rooh-soul.png" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://navuraah.com/feedback.html" />
 
   <!-- Favicon + Theme -->
   <link rel="icon" type="image/png" href="rooh-soul.png" />
@@ -263,6 +269,9 @@
       .ring-welcome { width: 110px !important; height: 110px !important; margin-top: -55px !important; margin-left: -55px !important; }
       .step-nav { flex-wrap: wrap; gap: 16px; justify-content: center; }
       .step-dots { order: -1; width: 100%; justify-content: center; }
+      #footer { padding: 32px 20px 24px !important; }
+      #footer > div:first-child { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
+      #footer nav { justify-content: center !important; }
     }
 
     @media (max-width: 480px) {
@@ -276,7 +285,7 @@
 <body>
 
 <!-- Starfield canvas -->
-<canvas id="starfield" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
+<canvas id="starfield" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
 
 <!-- ═══════════════════════════ PROGRESS BAR ═══════════════════════════ -->
 <div class="progress-bar" id="progressBar" style="display:none;">
@@ -727,14 +736,27 @@
 </div>
 
 <!-- Footer -->
-<footer id="footer" style="padding:28px 48px;border-top:1px solid rgba(168,155,194,0.08);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <img src="rooh-soul.png" alt="Rooh" style="width:20px;height:20px;animation:breathe 4s ease-in-out infinite;filter:drop-shadow(0 0 4px #f59e0b66);" />
-    <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:#fdf4e7;font-weight:500;">Rooh</span>
+<footer id="footer" style="padding:48px 48px 32px;border-top:1px solid rgba(168,155,194,0.1);position:relative;z-index:1;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;">
+    <!-- Brand -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 6px #f59e0b66);" />
+      <span style="font-family:'Cormorant Garamond';font-size:18px;color:#fdf4e7;font-weight:500;">Rooh</span>
+      <span style="font-family:'Nunito';font-size:11px;color:#a89bc244;letter-spacing:0.1em;">by Navu Raah</span>
+    </div>
+    <!-- Nav -->
+    <nav style="display:flex;gap:24px;flex-wrap:wrap;">
+      <a href="faq.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">FAQ</a>
+      <a href="demo.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">Demo</a>
+      <a href="about.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">About</a>
+      <a href="feedback.html" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">Feedback</a>
+    </nav>
+    <!-- Contact -->
+    <a href="mailto:hello@navuraah.com" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">hello@navuraah.com</a>
   </div>
-  <span style="font-family:'Nunito',sans-serif;font-size:12px;color:rgba(168,155,194,0.3);">
-    Your feedback is read personally by Sumeet.
-  </span>
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(168,155,194,0.06);text-align:center;">
+    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.4);">&copy; 2026 Navu Raah &middot; <a href="#" style="color:rgba(168,155,194,0.4);text-decoration:none;">Privacy Policy</a> &middot; <a href="#" style="color:rgba(168,155,194,0.4);text-decoration:none;">Terms of Service</a></span>
+  </div>
 </footer>
 
 <!-- Back to top -->
