@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rooh by Navu Raah | A Father's Promise</title>
+
+  <!-- SEO -->
+  <meta name="description" content="The story behind Rooh. A father, 8,000 miles from family, building the bridge his son needed." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://navuraah.com/about" />
+  <meta property="og:title" content="Rooh by Navu Raah | A Father's Promise" />
+  <meta property="og:description" content="It takes a village to raise a child. What happens when the village is 8,000 miles away?" />
+  <meta property="og:image" content="https://navuraah.com/rooh-soul.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rooh | A Father's Promise" />
+  <meta name="twitter:description" content="The story behind Rooh. A father building what his family needed." />
+
+  <!-- Favicon + Theme -->
+  <link rel="icon" type="image/png" href="rooh-soul.png" />
+  <meta name="theme-color" content="#1a1040" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #1a1040;
+      color: #fdf4e7;
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #1a1040; }
+    ::-webkit-scrollbar-thumb { background: #2d1b69; border-radius: 2px; }
+
+    /* === KEYFRAMES === */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    @keyframes orbRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ringExpand {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    @keyframes orbGlow {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(245,158,11,0.3)) drop-shadow(0 0 60px rgba(107,158,126,0.15)); }
+      50% { filter: drop-shadow(0 0 50px rgba(245,158,11,0.5)) drop-shadow(0 0 90px rgba(107,158,126,0.25)); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 40px 10px rgba(245,158,11,0.15); }
+      50% { box-shadow: 0 0 70px 20px rgba(245,158,11,0.28); }
+    }
+    @keyframes drawLine {
+      from { height: 0; }
+      to { height: 100%; }
+    }
+
+    /* === NAV === */
+    .nav-link { transition: color 0.2s; }
+    .nav-link:hover { color: #fdf4e7 !important; }
+    .nav-cta:hover { background: #fbbf24 !important; box-shadow: 0 4px 28px #f59e0b66 !important; }
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fdf4e7; margin: 5px 0; border-radius: 1px; transition: all 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* === STORY FLOW === */
+    .story-container {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Vertical thread connecting sections */
+    .story-thread {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(245,158,11,0.15) 10%,
+        rgba(168,155,194,0.1) 50%,
+        rgba(107,158,126,0.15) 90%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Story sections */
+    .story-section {
+      position: relative;
+      z-index: 1;
+      padding: 80px 0;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .story-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section divider dot */
+    .section-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Accent bar */
+    .accent-bar {
+      width: 40px;
+      height: 3px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    /* Quote-style highlight */
+    .pull-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #fdf4e7;
+      padding-left: 24px;
+      border-left: 3px solid rgba(245,158,11,0.4);
+      margin: 48px 0;
+    }
+
+    /* Section content wrapper — covers thread */
+    .story-content {
+      position: relative;
+      z-index: 2;
+      background: #1a1040;
+      padding: 8px 0;
+    }
+
+    /* Body text */
+    .story-body {
+      font-family: 'Nunito', sans-serif;
+      font-size: 17px;
+      color: #a89bc2;
+      line-height: 1.85;
+      margin-bottom: 24px;
+    }
+    .story-body:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Emphasis words */
+    .warm { color: #f59e0b; }
+    .sage { color: #6b9e7e; }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(168,155,194,0.1);
+    }
+
+    /* Sign-off */
+    .sign-off {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-style: italic;
+      font-weight: 400;
+      color: #fdf4e7;
+    }
+    .sign-off-role {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      color: #a89bc2;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed; bottom: 32px; right: 32px; z-index: 900;
+      width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(26,16,64,0.7); backdrop-filter: blur(12px);
+      color: #f59e0b; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .back-to-top:hover { transform: translateY(-3px); background: rgba(45,27,105,0.8); }
+
+    /* CTA */
+    .about-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 12px 40px #f59e0b66 !important; }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      #nav { padding: 14px 20px !important; }
+      .hamburger { display: block; }
+      .nav-links {
+        display: none; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(26,16,64,0.97); backdrop-filter: blur(20px);
+        justify-content: center; align-items: center; gap: 32px; z-index: 1000;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links .nav-link { font-size: 20px !important; color: #fdf4e7 !important; }
+      .nav-links .nav-cta { font-size: 16px !important; padding: 12px 32px !important; }
+
+      .about-hero { padding: 120px 20px 60px !important; }
+      .about-hero-heading { font-size: 42px !important; }
+      .story-outer { padding: 0 20px !important; }
+      .story-container { padding: 0 !important; }
+      .story-section { padding: 60px 0 !important; }
+      .story-thread { left: 50%; }
+      .pull-quote { font-size: 26px !important; }
+      .story-body { font-size: 16px !important; }
+      .name-card { padding: 28px 20px !important; }
+      .name-card-title { font-size: 28px !important; }
+      .promise-line { font-size: 22px !important; }
+      .about-cta-section { padding: 60px 20px 80px !important; }
+      .about-cta-heading { font-size: 36px !important; }
+
+      .site-footer { flex-direction: column !important; gap: 16px !important; text-align: center !important; padding: 32px 20px !important; }
+    }
+
+    @media (max-width: 480px) {
+      .about-hero-heading { font-size: 34px !important; }
+      .about-hero-heading br { display: none; }
+      .pull-quote { font-size: 22px !important; padding-left: 16px; }
+      .story-body { font-size: 15px !important; }
+      .name-card { padding: 24px 16px !important; }
+      .name-card-title { font-size: 24px !important; }
+      .promise-line { font-size: 20px !important; }
+      .about-cta-heading { font-size: 30px !important; }
+      .sign-off { font-size: 20px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Starfield canvas -->
+<canvas id="starfield" style="position:fixed;top:0;left:0;width:100%;height:250vh;pointer-events:none;z-index:0;opacity:0.9;"></canvas>
+
+<!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
+<nav id="nav" style="position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <img src="rooh-soul.png" alt="Rooh" style="width:38px;height:38px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 8px #f59e0b66);" />
+    <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;letter-spacing:0.04em;color:#fdf4e7;">Rooh</span>
+    <span style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:400;color:#a89bc2;letter-spacing:0.12em;text-transform:uppercase;margin-left:2px;margin-top:2px;">by Navu Raah</span>
+  </a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="index.html#how-it-works" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#a89bc2;text-decoration:none;letter-spacing:0.02em;">How It Works</a>
+    <a href="index.html#features" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#a89bc2;text-decoration:none;letter-spacing:0.02em;">Features</a>
+    <a href="faq.html" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#a89bc2;text-decoration:none;letter-spacing:0.02em;">FAQ</a>
+    <a href="feedback.html" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#a89bc2;text-decoration:none;letter-spacing:0.02em;">Feedback</a>
+    <a href="demo.html" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#a89bc2;text-decoration:none;letter-spacing:0.02em;">Demo</a>
+    <a href="about.html" class="nav-link" onclick="closeMenu()" style="font-family:'Nunito';font-size:14px;color:#fdf4e7;text-decoration:none;letter-spacing:0.02em;font-weight:600;">About</a>
+    <a href="index.html#waitlist" class="nav-cta" onclick="closeMenu()" style="font-family:'Nunito';font-size:13px;font-weight:700;color:#1a1040;background:#f59e0b;padding:8px 22px;border-radius:100px;text-decoration:none;letter-spacing:0.04em;box-shadow:0 4px 20px #f59e0b44;transition:all 0.2s;">Join Waitlist</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ HERO ══════════════════════════════════════ -->
+<section class="about-hero" style="padding:180px 48px 80px;text-align:center;position:relative;z-index:1;">
+  <!-- Radial glow -->
+  <div style="position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);pointer-events:none;"></div>
+
+  <div style="max-width:720px;margin:0 auto;">
+    <div style="animation:fadeUp 0.8s ease backwards;">
+      <span style="display:inline-flex;align-items:center;gap:8px;font-family:'Nunito';font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#f59e0b;margin-bottom:28px;border:1px solid rgba(245,158,11,0.3);padding:8px 20px;border-radius:100px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;"></span>
+        A Father's Promise
+      </span>
+    </div>
+    <h1 class="about-hero-heading" style="font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:500;line-height:1.1;color:#fdf4e7;margin-bottom:28px;animation:fadeUp 0.8s ease 0.15s backwards;">
+      It takes a village to raise a child.<br />
+      <em style="font-style:italic;color:#f59e0b;">What happens when the village is 8,000 miles away?</em>
+    </h1>
+    <div style="width:40px;height:3px;border-radius:2px;background:#f59e0b;margin:0 auto;animation:fadeUp 0.8s ease 0.3s backwards;"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ STORY ═════════════════════════════════════ -->
+<section class="story-outer" style="padding:0 48px 40px;position:relative;z-index:1;">
+  <div class="story-container" style="padding:0;">
+    <div class="story-thread"></div>
+
+    <!-- ── THE GAP ── -->
+    <div class="story-section" data-section>
+      <div class="story-content">
+        <div class="section-label" style="color:#f59e0b;">The gap</div>
+        <div class="accent-bar" style="background:#f59e0b;"></div>
+
+        <p class="story-body">
+          We moved to the US to build a better life for our son. What we didn't plan for was what we'd leave behind. The family. The grandparents who would pull him into their lap and tell him a story without being asked. The uncles and aunts who would teach him something just by being around.
+        </p>
+        <p class="story-body">
+          I grew up in that world. I know what it gave me. My son experienced it too, and he misses it. I wanted to find a way to bring even a fraction of it back to him.
+        </p>
+      </div>
+
+      <!-- Divider — sits on the thread -->
+      <div style="display:flex;justify-content:center;margin-top:48px;position:relative;z-index:3;">
+        <div class="section-dot" style="background:rgba(245,158,11,0.3);box-shadow:0 0 12px rgba(245,158,11,0.15);"></div>
+      </div>
+    </div>
+
+    <!-- ── BEFORE ROOH ── -->
+    <div class="story-section" data-section>
+      <div class="story-content">
+        <div class="section-label" style="color:#a89bc2;">Before Rooh</div>
+        <div class="accent-bar" style="background:#a89bc2;"></div>
+
+        <p class="story-body">
+          I became the storyteller. Every night, I would run my imagination wild, making him the hero of his own adventures with a companion he loved by his side. It worked. He would listen to that companion in ways he would never listen to his parents, because parents sound like they are teaching or scolding. A hero companion just sounds like a friend.
+        </p>
+
+        <div class="pull-quote">
+          But something was still missing. The stories were mine. The voice was mine.
+        </div>
+
+        <p class="story-body">
+          The person he truly lit up for was residing thousands of miles away. His <span class="warm">Dadi</span>. His <span class="warm">Nana</span>. Their voices carried a warmth that no app or video call could replicate.
+        </p>
+        <p class="story-body">
+          And then there were the hard days. The ones where you are exhausted from work, there is no family to lean on, and a tantrum hits. You hand over a screen. Not because you want to, but because you have nothing left. Every parent in this situation knows that guilt.
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div style="display:flex;justify-content:center;margin-top:48px;position:relative;z-index:3;">
+        <div class="section-dot" style="background:rgba(168,155,194,0.3);box-shadow:0 0 12px rgba(168,155,194,0.15);"></div>
+      </div>
+    </div>
+
+    <!-- ── THE SPARK ── -->
+    <div class="story-section" data-section>
+      <div class="story-content">
+        <div class="section-label" style="color:#6b9e7e;">The spark</div>
+        <div class="accent-bar" style="background:#6b9e7e;"></div>
+
+        <p class="story-body">
+          What if his grandmother could tell him a story in her own voice, even from thousands of miles away? What if the story was about his day, his friends, his world, and could teach him something without ever sounding like a lecture?
+        </p>
+
+        <div class="pull-quote" style="border-left-color:rgba(107,158,126,0.5);">
+          That question became <span class="sage">Rooh</span>.
+        </div>
+
+        <p class="story-body">
+          My son was the first user. If he didn't ask for "one more," it wasn't good enough.
+        </p>
+      </div>
+
+      <!-- Divider -->
+      <div style="display:flex;justify-content:center;margin-top:48px;position:relative;z-index:3;">
+        <div class="section-dot" style="background:rgba(107,158,126,0.3);box-shadow:0 0 12px rgba(107,158,126,0.15);"></div>
+      </div>
+    </div>
+
+    <!-- ── THE NAME ── -->
+    <div class="story-section" data-section>
+      <div class="story-content">
+        <div class="section-label" style="color:#f59e0b;">The name</div>
+        <div class="accent-bar" style="background:linear-gradient(90deg, #f59e0b, #6b9e7e);"></div>
+
+        <div style="display:flex;flex-direction:column;gap:40px;">
+          <!-- Navu Raah -->
+          <div class="name-card" style="background:rgba(45,27,105,0.95);border:1px solid rgba(245,158,11,0.12);border-radius:20px;padding:40px;">
+            <p class="name-card-title" style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;color:#f59e0b;margin-bottom:8px;">Navu Raah</p>
+            <p style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.5);letter-spacing:0.06em;margin-bottom:20px;">noun &middot; /nah-voo raah/</p>
+            <p class="story-body" style="margin-bottom:0;">
+              New path. A studio built to open a new path for Indian families, every day.
+            </p>
+          </div>
+
+          <!-- Rooh -->
+          <div class="name-card" style="background:rgba(45,27,105,0.95);border:1px solid rgba(107,158,126,0.12);border-radius:20px;padding:40px;">
+            <p class="name-card-title" style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;color:#6b9e7e;margin-bottom:8px;">Rooh</p>
+            <p style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.5);letter-spacing:0.06em;margin-bottom:20px;">noun &middot; /rooh/</p>
+            <p class="story-body" style="margin-bottom:0;">
+              Soul. The presence you feel when someone who loves you is near.
+            </p>
+          </div>
+        </div>
+
+        <!-- Promise line -->
+        <div style="text-align:center;margin-top:48px;">
+          <p class="promise-line" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;font-weight:400;color:#fdf4e7;line-height:1.4;">
+            <span class="warm">Rooh</span> is its first step. <span style="color:#a89bc2;">It will not be the last.</span>
+          </p>
+        </div>
+
+        <!-- Sign-off -->
+        <div style="margin-top:64px;text-align:center;">
+          <div style="display:flex;justify-content:center;margin-bottom:24px;">
+            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center;">
+              <div style="position:absolute;border-radius:50%;width:80px;height:80px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 3s ease-out 0s infinite;"></div>
+              <div style="position:absolute;border-radius:50%;width:80px;height:80px;border:1px solid rgba(245,158,11,0.2);animation:ringExpand 3s ease-out 1.5s infinite;"></div>
+              <img src="rooh-soul.png" alt="Rooh" style="width:56px;height:56px;animation:breathe 4s ease-in-out infinite, orbGlow 4s ease-in-out infinite, orbRotate 24s linear infinite;position:relative;z-index:2;" />
+            </div>
+          </div>
+          <p class="sign-off">Sumeet Kachalia</p>
+          <p class="sign-off-role">Father. Founder.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ CTA ═══════════════════════════════════════ -->
+<section class="about-cta-section" style="padding:40px 48px 120px;position:relative;z-index:1;text-align:center;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse, rgba(245,158,11,0.05) 0%, transparent 70%);pointer-events:none;"></div>
+  <div style="max-width:500px;margin:0 auto;">
+    <h2 class="about-cta-heading" style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:500;line-height:1.1;color:#fdf4e7;margin-bottom:16px;">
+      This is the story so far.<br /><em style="color:#f59e0b;font-style:italic;">Yours begins here.</em>
+    </h2>
+    <p style="font-family:'Nunito';font-size:16px;color:#a89bc2;line-height:1.75;margin-bottom:40px;">
+      Join the waitlist and be among the first families to experience Rooh.
+    </p>
+    <a href="index.html#waitlist" class="about-cta" style="display:inline-block;font-family:'Nunito';font-size:16px;font-weight:700;color:#1a1040;background:#f59e0b;padding:16px 40px;border-radius:100px;text-decoration:none;letter-spacing:0.04em;box-shadow:0 8px 32px #f59e0b44;transition:all 0.25s;animation:glowPulse 3s ease-in-out infinite;">Join the Waitlist</a>
+  </div>
+</section>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8593;</button>
+
+<!-- ═══════════════════════════════════════ FOOTER ════════════════════════════════════ -->
+<footer class="site-footer" style="padding:40px 48px;border-top:1px solid rgba(168,155,194,0.1);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="rooh-soul.png" alt="Rooh" style="width:26px;height:26px;animation:breathe 4s ease-in-out infinite, orbRotate 24s linear infinite;filter:drop-shadow(0 0 6px #f59e0b66);" />
+    <span style="font-family:'Cormorant Garamond';font-size:18px;color:#fdf4e7;font-weight:500;">Rooh</span>
+    <span style="font-family:'Nunito';font-size:11px;color:#a89bc244;letter-spacing:0.1em;">by Navu Raah</span>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+    <a href="mailto:hello@navuraah.com" style="font-family:'Nunito';font-size:13px;color:#a89bc2;text-decoration:none;transition:color 0.2s;">hello@navuraah.com</a>
+    <span style="font-family:'Nunito';font-size:13px;color:rgba(168,155,194,0.4);">&copy; 2026 Navu Raah. Built with love, for every Indian family, wherever their loved ones are.</span>
+    <span style="font-family:'Nunito';font-size:12px;color:rgba(168,155,194,0.3);margin-top:2px;">Rooh is a product by Navu Raah, a studio building AI experiences for Indian families.</span>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════ -->
+<script>
+// ─── Starfield ───────────────────────────────────────────────────────────────────────
+(function() {
+  var canvas = document.getElementById('starfield');
+  var ctx = canvas.getContext('2d');
+  var w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight * 2.5; }
+  resize();
+  window.addEventListener('resize', resize);
+  var stars = [];
+  for (var i = 0; i < 180; i++) {
+    stars.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.4 + 0.3, delay: Math.random() * 4, dur: Math.random() * 3 + 2 });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    var t = Date.now() / 1000;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var a = 0.2 + 0.8 * (0.5 + 0.5 * Math.sin((t + s.delay) / s.dur * Math.PI * 2));
+      ctx.beginPath();
+      ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(253,244,231,' + (a * 0.7) + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── Nav scroll blur ─────────────────────────────────────────────────────────────────
+(function() {
+  var nav = document.getElementById('nav');
+  var lastY = 0;
+  window.addEventListener('scroll', function() {
+    var y = window.scrollY;
+    if (y > 40) {
+      nav.style.background = 'rgba(26,16,64,0.92)';
+      nav.style.backdropFilter = 'blur(16px)';
+      nav.style.borderBottom = '1px solid rgba(168,155,194,0.1)';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+      nav.style.borderBottom = 'none';
+    }
+    if (!document.querySelector('.nav-links').classList.contains('open')) {
+      if (y > lastY && y > 80) {
+        nav.style.top = '-80px';
+        nav.style.opacity = '0';
+      } else {
+        nav.style.top = '0';
+        nav.style.opacity = '1';
+      }
+    }
+    lastY = y;
+  }, {passive: true});
+})();
+
+// ─── Scroll reveal for story sections ────────────────────────────────────────────────
+(function() {
+  var sections = document.querySelectorAll('[data-section]');
+  var observer = new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.classList.add('visible');
+      }
+    }
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  for (var i = 0; i < sections.length; i++) {
+    observer.observe(sections[i]);
+  }
+})();
+
+// ─── Back to top ────────────────────────────────────────────────────────────────────
+(function() {
+  var btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }, {passive: true});
+})();
+
+// ─── Mobile menu ────────────────────────────────────────────────────────────────────
+function toggleMenu() {
+  var nav = document.getElementById('nav');
+  document.querySelector('.hamburger').classList.toggle('active');
+  document.querySelector('.nav-links').classList.toggle('open');
+  var isOpen = document.querySelector('.nav-links').classList.contains('open');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+  if (isOpen) {
+    nav.style.top = '0';
+    nav.style.opacity = '1';
+  }
+}
+function closeMenu() {
+  document.querySelector('.hamburger').classList.remove('active');
+  document.querySelector('.nav-links').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+
+</body>
+</html>
